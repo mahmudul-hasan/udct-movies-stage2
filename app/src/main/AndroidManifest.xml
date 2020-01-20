@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".detailspage.DetailsPageActivity"></activity>
+        <activity android:name=".detailspage.view.DetailsPageActivity"></activity>
         <activity android:name=".mainpage.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
