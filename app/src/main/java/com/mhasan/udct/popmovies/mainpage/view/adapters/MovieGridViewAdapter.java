@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.mhasan.udct.popmovies.R;
-import com.mhasan.udct.popmovies.detailspage.DetailsPageActivity;
+import com.mhasan.udct.popmovies.detailspage.view.DetailsPageActivity;
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse;
 import com.squareup.picasso.Picasso;
 
