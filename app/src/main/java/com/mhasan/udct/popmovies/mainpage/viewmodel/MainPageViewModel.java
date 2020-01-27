@@ -8,7 +8,6 @@ import com.mhasan.udct.popmovies.utils.UrlUtils;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class MainPageViewModel extends AndroidViewModel implements MainPageViewModelOperations {
@@ -27,7 +26,7 @@ public class MainPageViewModel extends AndroidViewModel implements MainPageViewM
 		return initialCategory;
 	}
 
-	public LiveData<MovieResponse> getMovieResponseLiveData() {
+	public MutableLiveData<MovieResponse> getMovieResponseLiveData() {
 		return movieResponseLiveData;
 	}
 

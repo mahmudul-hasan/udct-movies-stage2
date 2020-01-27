@@ -11,12 +11,14 @@ import androidx.annotation.NonNull;
  */
 public class ImageUrlFactory implements UtilsFactory<String> {
 
-	public static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
-	public static final String IMAGE_SIZE = "w185";
+	private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
+	private static final String IMAGE_SIZE = "w185";
 	private String imageUri;
+	private final String providedImageSize;
 
-	public ImageUrlFactory(@NonNull String imageUri) {
+	public ImageUrlFactory(@NonNull String imageUri, @NonNull String imageSize) {
 		this.imageUri = imageUri.replaceAll("^/+", "");
+		providedImageSize = imageSize;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class ImageUrlFactory implements UtilsFactory<String> {
 
 	private String getUriText() {
 		Uri uri = Uri.parse(BASE_IMAGE_URL).buildUpon()
-				.appendPath(IMAGE_SIZE)
+				.appendPath(providedImageSize.isEmpty() ? IMAGE_SIZE : providedImageSize)
 				.appendPath(imageUri)
 				.build();
 		return uri.toString();
