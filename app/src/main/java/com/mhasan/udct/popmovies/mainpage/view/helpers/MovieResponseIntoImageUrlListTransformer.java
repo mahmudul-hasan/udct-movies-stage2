@@ -22,7 +22,7 @@ public class MovieResponseIntoImageUrlListTransformer implements Transformer<Mov
 		List<String> imageUrlList = new ArrayList<>();
 		for (int i = 0; i < movieResponse.getResults().size(); i++) {
 			String posterPath = movieResponse.getResults().get(i).getPoster_path();
-			String imageUrl = new ImageUrlFactory(posterPath == null ? "" : posterPath).create();
+			String imageUrl = new ImageUrlFactory(posterPath == null ? "" : posterPath, "").create();
 			imageUrlList.add(imageUrl);
 		}
 		return imageUrlList;

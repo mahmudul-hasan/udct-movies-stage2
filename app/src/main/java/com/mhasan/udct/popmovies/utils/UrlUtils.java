@@ -12,6 +12,8 @@ public class UrlUtils {
 	public static final String BASE_URL = "https://api.themoviedb.org";
 	public static final String CATEGORY_POPULAR = "popular";
 	public static final String CATEGORY_TOP_RATED = "top_rated";
+	public static final String YOUTUBE_APP_URI = "vnd.youtube:";
+	public static final String YOUTUBE_WEB_URL = "http://www.youtube.com/watch?v=";
 
 	public static String getApiKey() {
 		return API_KEY;

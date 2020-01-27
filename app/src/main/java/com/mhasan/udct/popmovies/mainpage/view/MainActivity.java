@@ -28,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
 	private MainPageViewModel mainPageViewModel;
 	private String menuClicked = "";
 
+	private void considerLoadingInitialMovies() {
+		if (mainPageViewModel.getMovieResponseLiveData().getValue() == null) {
+			mainPageViewModel.loadAndCacheMovies(mainPageViewModel.getInitialCategory());
+		}
+	}
+
 	private String getMenuClicked() {
 		return menuClicked;
 	}
@@ -42,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
 		MovieGridViewAdapter adapter = new MovieGridViewAdapter(this, imageList, movieResponse);
 		gridViewRv.setLayoutManager(new GridLayoutManager(this, getSpanCount()));
 		gridViewRv.setAdapter(adapter);
-	}
-
-	private void loadInitialMovies() {
-		mainPageViewModel.loadAndCacheMovies(mainPageViewModel.getInitialCategory());
 	}
 
 	private void observeViewModel(MainPageViewModel viewModel) {
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		mainPageViewModel = ViewModelProviders.of(this).get(MainPageViewModel.class);
 		observeViewModel(mainPageViewModel);
-		loadInitialMovies();
+		considerLoadingInitialMovies();
 		updateMenuTitle(getString(new SortMenuTitleDeterminerBasedOnCategory().transform(mainPageViewModel.getInitialCategory())));
 	}
 

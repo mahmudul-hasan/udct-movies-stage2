@@ -2,15 +2,12 @@ package com.mhasan.udct.popmovies.mainpage.repository;
 
 import java.util.ArrayList;
 
-import android.app.Application;
-
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse;
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse.ResultsBean;
 import com.mhasan.udct.popmovies.utils.MovieServiceInterface;
 import com.mhasan.udct.popmovies.utils.UrlUtils;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,16 +17,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainPageRepository implements MainPageUseCases {
 
-	private MovieResponse movieResponse;
+	public static MainPageRepository getInstance() {
+		return new MainPageRepository();
+	}
 
-//	private String sortCategory;
+	private MovieResponse movieResponse;
 
 	public MainPageRepository() {
 		movieResponse = createEmptyMovieResponse();
 	}
 
-	public static MainPageRepository getInstance() {
-		return new MainPageRepository();
+	private MovieResponse createEmptyMovieResponse() {
+		MovieResponse movieResponse = new MovieResponse();
+		movieResponse.setResults(new ArrayList<ResultsBean>());
+		return movieResponse;
+	}
+
+	public MovieResponse getMovieResponse() {
+		return movieResponse;
 	}
 
 	@Override
@@ -49,27 +54,13 @@ public class MainPageRepository implements MainPageUseCases {
 
 			@Override
 			public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-//				movieres = response.body();
-//				movieResponseLiveData.setValue(response.body());
 				movieResponseLiveData.setValue(response.body());
 				setMovieResponse(response.body());
-//				imageUrlList = new MovieResponseIntoImageUrlListTransformer().transform(movieResponse);
-//				initializeView();
 			}
 		});
 	}
 
-	private MovieResponse createEmptyMovieResponse() {
-		MovieResponse movieResponse = new MovieResponse();
-		movieResponse.setResults(new ArrayList<ResultsBean>());
-		return movieResponse;
-	}
-
 	public void setMovieResponse(@NonNull MovieResponse movieResponse) {
 		this.movieResponse = movieResponse;
-	}
-
-	public MovieResponse getMovieResponse() {
-		return movieResponse;
 	}
 }
