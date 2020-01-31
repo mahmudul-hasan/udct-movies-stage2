@@ -1,9 +1,13 @@
 package com.mhasan.udct.popmovies.mainpage.repository;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import android.app.Application;
+
+import com.mhasan.udct.popmovies.database.DatabaseOperationsRepository;
+import com.mhasan.udct.popmovies.database.FavoriteMovieEntity;
+import com.mhasan.udct.popmovies.mainpage.repository.helpers.FavoriteMovieEntitiesToMovieResponseTransformer;
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse;
-import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse.ResultsBean;
 import com.mhasan.udct.popmovies.utils.MovieServiceInterface;
 import com.mhasan.udct.popmovies.utils.UrlUtils;
 
@@ -15,26 +19,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainPageRepository implements MainPageUseCases {
+public class MainPageRepository extends DatabaseOperationsRepository implements MainPageUseCases {
 
-	public static MainPageRepository getInstance() {
-		return new MainPageRepository();
+	public static MainPageRepository getInstance(Application application) {
+		return new MainPageRepository(application);
 	}
 
-	private MovieResponse movieResponse;
-
-	public MainPageRepository() {
-		movieResponse = createEmptyMovieResponse();
+	public MainPageRepository(Application application) {
+		super(application);
 	}
 
-	private MovieResponse createEmptyMovieResponse() {
-		MovieResponse movieResponse = new MovieResponse();
-		movieResponse.setResults(new ArrayList<ResultsBean>());
-		return movieResponse;
-	}
-
-	public MovieResponse getMovieResponse() {
-		return movieResponse;
+	public void considerLoadingFavorites(@NonNull List<FavoriteMovieEntity> favoriteMovieEntities, final MutableLiveData<MovieResponse> movieResponseLiveData) {
+		movieResponseLiveData.setValue(new FavoriteMovieEntitiesToMovieResponseTransformer().transform(favoriteMovieEntities));
 	}
 
 	@Override
@@ -55,12 +51,7 @@ public class MainPageRepository implements MainPageUseCases {
 			@Override
 			public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
 				movieResponseLiveData.setValue(response.body());
-				setMovieResponse(response.body());
 			}
 		});
-	}
-
-	public void setMovieResponse(@NonNull MovieResponse movieResponse) {
-		this.movieResponse = movieResponse;
 	}
 }

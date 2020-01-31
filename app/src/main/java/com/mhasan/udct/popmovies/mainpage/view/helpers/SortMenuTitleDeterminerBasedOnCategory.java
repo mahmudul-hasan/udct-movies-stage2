@@ -19,6 +19,8 @@ public class SortMenuTitleDeterminerBasedOnCategory implements Transformer<Strin
 				return R.string.popularity;
 			case UrlUtils.CATEGORY_TOP_RATED:
 				return R.string.highest_rated;
+			case UrlUtils.CATEGORY_FAVORITES:
+				return R.string.favorites;
 		}
 		return -1;
 	}

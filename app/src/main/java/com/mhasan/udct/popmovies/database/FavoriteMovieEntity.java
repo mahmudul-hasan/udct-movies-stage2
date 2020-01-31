@@ -8,14 +8,16 @@ public class FavoriteMovieEntity {
 
 	@PrimaryKey
 	private int movieId;
+	private String movieTitle;
 	private String posterPath;
 	private String backdropPath;
 	private double averageVote;
 	private String releaseDate;
 	private String overview;
 
-	public FavoriteMovieEntity(int movieId, String posterPath, String backdropPath, double averageVote, String releaseDate, String overview) {
+	public FavoriteMovieEntity(int movieId, String movieTitle, String posterPath, String backdropPath, double averageVote, String releaseDate, String overview) {
 		this.movieId = movieId;
+		this.movieTitle = movieTitle;
 		this.posterPath = posterPath;
 		this.backdropPath = backdropPath;
 		this.averageVote = averageVote;
@@ -29,6 +31,14 @@ public class FavoriteMovieEntity {
 
 	public void setMovieId(int movieId) {
 		this.movieId = movieId;
+	}
+
+	public String getMovieTitle() {
+		return this.movieTitle;
+	}
+
+	public void setMovieTitle(String movieTitle) {
+		this.movieTitle = movieTitle;
 	}
 
 	public String getPosterPath() {

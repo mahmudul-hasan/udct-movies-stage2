@@ -17,6 +17,11 @@
                 android:id="@+id/sortByTopRatings"
                 android:title="@string/highest_rated"
                 app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/showFavorites"
+                android:title="@string/favorites"
+                app:showAsAction="ifRoom" />
         </menu>
 
     </item>
