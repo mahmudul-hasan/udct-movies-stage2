@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mhasan.udct.popmovies.R;
 import com.mhasan.udct.popmovies.database.FavoriteMovieEntity;
@@ -49,39 +48,40 @@ public class DetailsPageActivity extends AppCompatActivity {
 		return detailsPageViewModel.getCurrentlySelectedMovie();
 	}
 
-	public void handleTrailerButtonClick(View view) {
-		final VideoTrailerResponse videoTrailerResponse = detailsPageViewModel.getVideoTrailerLiveData().getValue();
-		new TrailerDisplayer(this).execute(videoTrailerResponse);
-	}
-
 	public void handleFavoriteButtonClick(View view) {
 		switch ((String) view.getTag()) {
 			case "ic_favorite_border_24px":
-				setFavoriteView((ImageView)view);
+				setFavoriteView((ImageView) view);
 				detailsPageViewModel.addFavoriteMovieIntoDb(detailsPageViewModel.getCurrentlySelectedMovie());
 				break;
 			case "ic_favorited_24px":
-				setUnFavoriteView((ImageView)view);
+				setUnFavoriteView((ImageView) view);
 				detailsPageViewModel.deleteFavoriteMovieFromDb(detailsPageViewModel.getCurrentlySelectedMovie());
 				break;
 		}
 	}
 
-	private void setUnFavoriteView(ImageView view) {
-		view.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_24px));
-		view.setTag("ic_favorite_border_24px");
+	public void handleTrailerButtonClick(View view) {
+		final VideoTrailerResponse videoTrailerResponse = detailsPageViewModel.getVideoTrailerLiveData().getValue();
+		new TrailerDisplayer(this).execute(videoTrailerResponse);
 	}
 
-	private void setFavoriteView(ImageView view) {
-		view.setImageDrawable(getDrawable(R.drawable.ic_favorited_24px));
-		view.setTag("ic_favorited_24px");
+	//TODO - refactor
+	private void initializeFavoriteButton(List<FavoriteMovieEntity> favoriteMovies) {
+		ImageView favoriteView = findViewById(R.id.favoriteButtonIv);
+		for (FavoriteMovieEntity favoriteMovie : favoriteMovies) {
+			if (favoriteMovie.getMovieId() == getCurrentlySelectedMovie().getId()) {
+				setFavoriteView(favoriteView);
+				return;
+			}
+		}
+		setUnFavoriteView(favoriteView);
 	}
 
 	private void observeViewModel(@NonNull DetailsPageViewModel viewModel) {
 		viewModel.getReviewsResponseLiveData().observe(this, new Observer<ReviewsResponse>() {
 			@Override
 			public void onChanged(ReviewsResponse reviewsResponse) {
-				//todo - save the new response
 				ExpandableListView reviewsListView = findViewById(R.id.reviewListElv);
 				reviewsListView.setAdapter(new ReviewsAdapter(DetailsPageActivity.this, reviewsResponse.getResults()));
 				new ReviewsViewAdjuster().modify(reviewsListView);
@@ -100,22 +100,9 @@ public class DetailsPageActivity extends AppCompatActivity {
 				@Override
 				public void onChanged(List<FavoriteMovieEntity> favoriteMovies) {
 					initializeFavoriteButton(favoriteMovies);
-					Toast.makeText(DetailsPageActivity.this, favoriteMovies.toString(), Toast.LENGTH_LONG).show();
 				}
 			});
 		}
-	}
-
-	//TODO - refactor
-	private void initializeFavoriteButton(List<FavoriteMovieEntity> favoriteMovies) {
-		ImageView favoriteView = findViewById(R.id.favoriteButtonIv);
-		for (FavoriteMovieEntity favoriteMovie : favoriteMovies) {
-			if (favoriteMovie.getMovieId() == getCurrentlySelectedMovie().getId()) {
-				setFavoriteView(favoriteView);
-				return;
-			}
-		}
-		setUnFavoriteView(favoriteView);
 	}
 
 	@Override
@@ -124,11 +111,11 @@ public class DetailsPageActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_details_page);
 		detailsPageViewModel = ViewModelProviders.of(this).get(DetailsPageViewModel.class);
 		detailsPageViewModel.cacheCurrentlySelectedMovie(retrieveSelectedMovieFromIntent());
-		observeViewModel(detailsPageViewModel);
 		setupActionBar();
 		populateViews();
 		considerLoadingTrailers();
 		considerLoadingReviews();
+		observeViewModel(detailsPageViewModel);
 	}
 
 	@Override
@@ -157,6 +144,16 @@ public class DetailsPageActivity extends AppCompatActivity {
 	private ResultsBean retrieveSelectedMovieFromIntent() {
 		Bundle bundle = getIntent().getExtras();
 		return bundle.getParcelable(DATA_RETRIEVAL_KEY);
+	}
+
+	private void setFavoriteView(ImageView view) {
+		view.setImageDrawable(getDrawable(R.drawable.ic_favorited_24px));
+		view.setTag("ic_favorited_24px");
+	}
+
+	private void setUnFavoriteView(ImageView view) {
+		view.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_24px));
+		view.setTag("ic_favorite_border_24px");
 	}
 
 	private void setupActionBar() {

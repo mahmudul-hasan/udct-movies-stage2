@@ -8,8 +8,8 @@ import com.mhasan.udct.popmovies.database.FavoriteMovieEntity;
 import com.mhasan.udct.popmovies.detailspage.repository.DetailsPageRepository;
 import com.mhasan.udct.popmovies.detailspage.repository.model.ReviewsResponse;
 import com.mhasan.udct.popmovies.detailspage.repository.model.VideoTrailerResponse;
+import com.mhasan.udct.popmovies.detailspage.viewmodel.helpers.FavoriteMovieTransformer;
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse.ResultsBean;
-import com.mhasan.udct.popmovies.utils.Transformer;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -30,8 +30,9 @@ public class DetailsPageViewModel extends AndroidViewModel implements DetailsPag
 		videoTrailerLiveData = new MutableLiveData<>();
 	}
 
-	public LiveData<List<FavoriteMovieEntity>> getFavoriteMoviesLiveData() {
-		return detailsPageRepository.getFavoriteMovies();
+	public void addFavoriteMovieIntoDb(ResultsBean favoriteMovie) {
+		FavoriteMovieEntity favoriteMovieEntity = new FavoriteMovieTransformer().transform(favoriteMovie);
+		detailsPageRepository.addFavoriteMovieIntoDb(favoriteMovieEntity);
 	}
 
 	@Override
@@ -39,9 +40,18 @@ public class DetailsPageViewModel extends AndroidViewModel implements DetailsPag
 		if (currentlySelectedMovie == null) currentlySelectedMovie = movie;
 	}
 
+	public void deleteFavoriteMovieFromDb(ResultsBean favoriteMovie) {
+		FavoriteMovieEntity favoriteMovieEntity = new FavoriteMovieTransformer().transform(favoriteMovie);
+		detailsPageRepository.deleteFavoriteMovieFromDb(favoriteMovieEntity);
+	}
+
 	@Override
 	public ResultsBean getCurrentlySelectedMovie() {
 		return currentlySelectedMovie;
+	}
+
+	public LiveData<List<FavoriteMovieEntity>> getFavoriteMoviesLiveData() {
+		return detailsPageRepository.getFavoriteMovies();
 	}
 
 	public MutableLiveData<ReviewsResponse> getReviewsResponseLiveData() {
@@ -62,27 +72,4 @@ public class DetailsPageViewModel extends AndroidViewModel implements DetailsPag
 		detailsPageRepository.loadVideoTrailers(movieId, videoTrailerLiveData);
 	}
 
-	public void addFavoriteMovieIntoDb(ResultsBean favoriteMovie) {
-		FavoriteMovieEntity favoriteMovieEntity = new FavoriteMovieTransformer().transform(favoriteMovie);
-		detailsPageRepository.addFavoriteMovieIntoDb(favoriteMovieEntity);
-	}
-
-	public void deleteFavoriteMovieFromDb(ResultsBean favoriteMovie) {
-		FavoriteMovieEntity favoriteMovieEntity = new FavoriteMovieTransformer().transform(favoriteMovie);
-		detailsPageRepository.deleteFavoriteMovieFromDb(favoriteMovieEntity);
-	}
-
-	public class FavoriteMovieTransformer implements Transformer<ResultsBean, FavoriteMovieEntity> {
-
-		@Override
-		public FavoriteMovieEntity transform(ResultsBean original) {
-			int movieId = original.getId();
-			String posterPath = original.getPoster_path();
-			String backdropPath = original.getBackdrop_path();
-			double averageVote = original.getVote_average();
-			String releaseDate = original.getRelease_date();
-			String overview = original.getOverview();
-			return new FavoriteMovieEntity(movieId, posterPath, backdropPath, averageVote, releaseDate, overview);
-		}
-	}
 }

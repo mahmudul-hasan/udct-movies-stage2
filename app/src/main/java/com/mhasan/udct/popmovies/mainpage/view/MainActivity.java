@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mhasan.udct.popmovies.R;
+import com.mhasan.udct.popmovies.database.FavoriteMovieEntity;
+import com.mhasan.udct.popmovies.mainpage.repository.helpers.FavoriteMovieEntitiesToMovieResponseTransformer;
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse;
 import com.mhasan.udct.popmovies.mainpage.view.adapters.MovieGridViewAdapter;
 import com.mhasan.udct.popmovies.mainpage.view.helpers.DeviceConfigurationIntoGridSpanTransformer;
@@ -15,6 +17,7 @@ import com.mhasan.udct.popmovies.mainpage.view.helpers.SortMenuItemTitleModifier
 import com.mhasan.udct.popmovies.mainpage.view.helpers.SortMenuTitleDeterminerBasedOnCategory;
 import com.mhasan.udct.popmovies.mainpage.view.helpers.SortMovies;
 import com.mhasan.udct.popmovies.mainpage.viewmodel.MainPageViewModel;
+import com.mhasan.udct.popmovies.utils.UrlUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 	private String menuClicked = "";
 
 	private void considerLoadingInitialMovies() {
-		if (mainPageViewModel.getMovieResponseLiveData().getValue() == null) {
+		if (!mainPageViewModel.getInitialCategory().equals(UrlUtils.CATEGORY_FAVORITES)) {
 			mainPageViewModel.loadAndCacheMovies(mainPageViewModel.getInitialCategory());
 		}
 	}
@@ -50,11 +53,21 @@ public class MainActivity extends AppCompatActivity {
 		gridViewRv.setAdapter(adapter);
 	}
 
-	private void observeViewModel(MainPageViewModel viewModel) {
+	private void observeViewModel(final MainPageViewModel viewModel) {
 		viewModel.getMovieResponseLiveData().observe(this, new Observer<MovieResponse>() {
 			@Override
 			public void onChanged(MovieResponse movieResponse) {
 				initializeMovieGridViewsWith(movieResponse);
+			}
+		});
+		viewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovieEntity>>() {
+			@Override
+			public void onChanged(List<FavoriteMovieEntity> favoriteMovieEntities) {
+				if (mainPageViewModel.getInitialCategory().equals(UrlUtils.CATEGORY_FAVORITES)) {
+					MovieResponse movieResponse = new FavoriteMovieEntitiesToMovieResponseTransformer()
+							.transform(favoriteMovieEntities);
+					mainPageViewModel.getMovieResponseLiveData().setValue(movieResponse);
+				}
 			}
 		});
 	}
@@ -65,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		mainPageViewModel = ViewModelProviders.of(this).get(MainPageViewModel.class);
 		observeViewModel(mainPageViewModel);
-		considerLoadingInitialMovies();
 		updateMenuTitle(getString(new SortMenuTitleDeterminerBasedOnCategory().transform(mainPageViewModel.getInitialCategory())));
 	}
 
@@ -77,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		new SortMovies(mainPageViewModel).execute(item);
+		new SortMovies(mainPageViewModel, this).execute(item);
 		updateMenuTitle(String.valueOf(item.getTitle()));
 		return super.onOptionsItemSelected(item);
 	}
@@ -86,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		new SortMenuItemTitleModifier(getString(R.string.sort_movies) + ": \n" + getMenuClicked()).modify(menu);
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		considerLoadingInitialMovies();
 	}
 
 	private void setMenuClicked(@NonNull String menuClicked) {

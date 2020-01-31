@@ -23,8 +23,25 @@ public class ReviewsAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public int getGroupCount() {
-		return reviews.size();
+	public Object getChild(int groupPosition, int childPosition) {
+		return reviews.get(groupPosition);
+	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return groupPosition;
+	}
+
+	@Override
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+		String reviewBody = reviews.get(groupPosition).getContent();
+		if (convertView == null) {
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(R.layout.review_body, null);
+		}
+		TextView reviewBodyTv = convertView.findViewById(R.id.reviewTextTv);
+		reviewBodyTv.setText(reviewBody);
+		return convertView;
 	}
 
 	@Override
@@ -38,23 +55,13 @@ public class ReviewsAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public Object getChild(int groupPosition, int childPosition) {
-		return reviews.get(groupPosition);
+	public int getGroupCount() {
+		return reviews.size();
 	}
 
 	@Override
 	public long getGroupId(int groupPosition) {
 		return groupPosition;
-	}
-
-	@Override
-	public long getChildId(int groupPosition, int childPosition) {
-		return groupPosition;
-	}
-
-	@Override
-	public boolean hasStableIds() {
-		return false;
 	}
 
 	@Override
@@ -70,15 +77,8 @@ public class ReviewsAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-		String reviewBody = reviews.get(groupPosition).getContent();
-		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.review_body, null);
-		}
-		TextView reviewBodyTv = convertView.findViewById(R.id.reviewTextTv);
-		reviewBodyTv.setText(reviewBody);
-		return convertView;
+	public boolean hasStableIds() {
+		return false;
 	}
 
 	@Override

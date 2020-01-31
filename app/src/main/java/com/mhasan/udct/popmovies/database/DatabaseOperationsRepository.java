@@ -17,8 +17,8 @@ public class DatabaseOperationsRepository {
 	public DatabaseOperationsRepository(Application application) {
 		popularMoviesDatabase = PopularMoviesDatabase.getInstance(application);
 		appExecutors = AppExecutors.getInstance();
+		//Read
 		favoriteMovies = getFavoriteMovieDao().loadFavoriteMovies();
-//		readFavoriteMoviesFromDb();
 	}
 
 	//Create
