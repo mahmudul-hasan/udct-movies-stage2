@@ -12,6 +12,11 @@ import android.widget.TextView;
 import com.mhasan.udct.popmovies.R;
 import com.mhasan.udct.popmovies.detailspage.repository.model.ReviewsResponse;
 
+/**
+ * Adapter class for reviews.
+ *
+ * @author Mahmudul Hasan.
+ */
 public class ReviewsAdapter extends BaseExpandableListAdapter {
 
 	private Context context;

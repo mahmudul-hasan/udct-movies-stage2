@@ -8,6 +8,11 @@ import com.mhasan.udct.popmovies.utils.AppExecutors;
 
 import androidx.lifecycle.LiveData;
 
+/**
+ * This is the database repository that handles the CRUD operations on the database.
+ *
+ * @authos Mahmudul Hasan.
+ */
 public class DatabaseOperationsRepository {
 
 	private final AppExecutors appExecutors;

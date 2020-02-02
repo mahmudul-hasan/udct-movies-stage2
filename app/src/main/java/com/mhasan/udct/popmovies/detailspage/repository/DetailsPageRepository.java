@@ -1,18 +1,14 @@
 package com.mhasan.udct.popmovies.detailspage.repository;
 
-import java.util.List;
-
 import android.app.Application;
 
 import com.mhasan.udct.popmovies.database.DatabaseOperationsRepository;
-import com.mhasan.udct.popmovies.database.FavoriteMovieEntity;
 import com.mhasan.udct.popmovies.detailspage.repository.model.ReviewsResponse;
 import com.mhasan.udct.popmovies.detailspage.repository.model.VideoTrailerResponse;
 import com.mhasan.udct.popmovies.utils.MovieServiceInterface;
 import com.mhasan.udct.popmovies.utils.UrlUtils;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,20 +16,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DetailsPageRepository implements DetailsPageUseCases {
-
-	private DatabaseOperationsRepository dbRepository;
-
-	public DetailsPageRepository(Application application) {
-		dbRepository = new DatabaseOperationsRepository(application);
-	}
-
-	public LiveData<List<FavoriteMovieEntity>> getFavoriteMovies() {
-		return dbRepository.getFavoriteMovies();
-	}
+/**
+ * Repository class for the details page; handles the service calls and data saving and retrieving into the
+ * database.
+ *
+ * @author Mahmudul Hasan.
+ */
+public class DetailsPageRepository extends DatabaseOperationsRepository implements DetailsPageUseCases {
 
 	public static DetailsPageRepository getInstance(Application application) {
 		return new DetailsPageRepository(application);
+	}
+
+	public DetailsPageRepository(Application application) {
+		super(application);
 	}
 
 	private MovieServiceInterface getMovieServiceInterface() {
@@ -74,13 +70,5 @@ public class DetailsPageRepository implements DetailsPageUseCases {
 				videoTrailerResponseLiveData.setValue(response.body());
 			}
 		});
-	}
-
-	public void addFavoriteMovieIntoDb(FavoriteMovieEntity favoriteMovieEntity) {
-		dbRepository.addFavoriteMovieIntoDb(favoriteMovieEntity);
-	}
-
-	public void deleteFavoriteMovieFromDb(FavoriteMovieEntity favoriteMovieEntity) {
-		dbRepository.deleteFavoriteMovieFromDb(favoriteMovieEntity);
 	}
 }

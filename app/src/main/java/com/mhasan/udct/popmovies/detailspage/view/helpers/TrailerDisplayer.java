@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.mhasan.udct.popmovies.R;
 import com.mhasan.udct.popmovies.detailspage.repository.model.VideoTrailerResponse;
@@ -17,6 +18,12 @@ import com.mhasan.udct.popmovies.utils.UrlUtils;
 
 import androidx.appcompat.app.AlertDialog.Builder;
 
+/**
+ * This class creates a dialogbox with all the trailers and videos and opens Youtube app to run the video
+ * selected.
+ *
+ * @author Mahmudul Hanan.
+ */
 public class TrailerDisplayer implements Executer<VideoTrailerResponse> {
 
 	private Context context;
@@ -27,6 +34,10 @@ public class TrailerDisplayer implements Executer<VideoTrailerResponse> {
 
 	@Override
 	public void execute(VideoTrailerResponse videoTrailerResponse) {
+		if (videoTrailerResponse == null || videoTrailerResponse.getResults() == null) {
+			Toast.makeText(context, context.getString(R.string.videoShoeingError), Toast.LENGTH_LONG).show();
+			return;
+		}
 		showTrailersDialog(videoTrailerResponse, context);
 	}
 

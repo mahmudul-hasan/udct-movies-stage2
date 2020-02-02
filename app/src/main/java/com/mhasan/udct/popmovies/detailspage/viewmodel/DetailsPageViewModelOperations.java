@@ -15,9 +15,9 @@ public interface DetailsPageViewModelOperations {
 
 	void addFavoriteMovieIntoDb(ResultsBean favoriteMovie);
 
-	void deleteFavoriteMovieFromDb(ResultsBean favoriteMovie);
-
 	void cacheCurrentlySelectedMovie(@NonNull ResultsBean movie);
+
+	void deleteFavoriteMovieFromDb(ResultsBean favoriteMovie);
 
 	ResultsBean getCurrentlySelectedMovie();
 

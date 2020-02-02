@@ -10,14 +10,16 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+/**
+ * This is the data accessor class for the database.
+ *
+ * @author Mahmudul Hasan.
+ */
 @Dao
 public interface FavoriteMovieDao {
 
 	@Delete
 	void deleteFavoriteMovie(FavoriteMovieEntity favoriteMovie);
-
-	@Query("SELECT * FROM favorite_movie_table WHERE movieId = :id")
-	FavoriteMovieEntity fetchFavoriteMovieHavingId(int id);
 
 	@Insert
 	void insertFavoriteMovie(FavoriteMovieEntity favoriteMovie);
