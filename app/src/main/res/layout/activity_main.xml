@@ -6,6 +6,16 @@
     android:background="@color/yellow"
     tools:context=".mainpage.view.MainActivity">
 
+    <ProgressBar
+        android:id="@+id/loadingPb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:minWidth="100dp"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movieGridViewRv"
         android:layout_width="match_parent"

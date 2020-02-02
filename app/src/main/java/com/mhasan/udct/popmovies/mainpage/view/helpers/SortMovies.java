@@ -22,20 +22,25 @@ import androidx.lifecycle.Observer;
 public class SortMovies implements Executer<MenuItem> {
 
 	private LifecycleOwner lifecycleOwner;
+	private LoadingProgressController loadingProgressController;
 	private MainPageViewModel mainPageViewModel;
 
-	public SortMovies(@NonNull MainPageViewModel mainPageViewModel, LifecycleOwner lifecycleOwner) {
+	public SortMovies(@NonNull MainPageViewModel mainPageViewModel,
+			LifecycleOwner lifecycleOwner, LoadingProgressController loadingProgressController) {
 		this.mainPageViewModel = mainPageViewModel;
 		this.lifecycleOwner = lifecycleOwner;
+		this.loadingProgressController = loadingProgressController;
 	}
 
 	@Override
 	public void execute(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.sortByPopularity:
+				showLoadingProgress();
 				mainPageViewModel.sortMoviesBy(UrlUtils.CATEGORY_POPULAR);
 				break;
 			case R.id.sortByTopRatings:
+				showLoadingProgress();
 				mainPageViewModel.sortMoviesBy(UrlUtils.CATEGORY_TOP_RATED);
 				break;
 			case R.id.showFavorites:
@@ -47,5 +52,9 @@ public class SortMovies implements Executer<MenuItem> {
 				});
 				break;
 		}
+	}
+
+	private void showLoadingProgress() {
+		loadingProgressController.shouldShowProgress(true);
 	}
 }

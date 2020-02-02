@@ -5,6 +5,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.mhasan.udct.popmovies.R;
 import com.mhasan.udct.popmovies.database.FavoriteMovieEntity;
@@ -12,6 +13,7 @@ import com.mhasan.udct.popmovies.mainpage.repository.helpers.FavoriteMovieEntiti
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse;
 import com.mhasan.udct.popmovies.mainpage.view.adapters.MovieGridViewAdapter;
 import com.mhasan.udct.popmovies.mainpage.view.helpers.DeviceConfigurationIntoGridSpanTransformer;
+import com.mhasan.udct.popmovies.mainpage.view.helpers.LoadingProgressController;
 import com.mhasan.udct.popmovies.mainpage.view.helpers.MovieResponseIntoImageUrlListTransformer;
 import com.mhasan.udct.popmovies.mainpage.view.helpers.SortMenuItemTitleModifier;
 import com.mhasan.udct.popmovies.mainpage.view.helpers.SortMenuTitleDeterminerBasedOnCategory;
@@ -26,7 +28,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoadingProgressController {
 
 	private MainPageViewModel mainPageViewModel;
 	private String menuClicked = "";
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onChanged(MovieResponse movieResponse) {
 				initializeMovieGridViewsWith(movieResponse);
+				shouldShowProgress(false);
 			}
 		});
 		viewModel.getFavoriteMovies().observe(this, new Observer<List<FavoriteMovieEntity>>() {
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		mainPageViewModel = ViewModelProviders.of(this).get(MainPageViewModel.class);
 		observeViewModel(mainPageViewModel);
+		shouldShowProgress(true);
 		updateMenuTitle(getString(new SortMenuTitleDeterminerBasedOnCategory().transform(mainPageViewModel.getInitialCategory())));
 	}
 
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		new SortMovies(mainPageViewModel, this).execute(item);
+		new SortMovies(mainPageViewModel, this, this).execute(item);
 		updateMenuTitle(String.valueOf(item.getTitle()));
 		return super.onOptionsItemSelected(item);
 	}
@@ -108,6 +112,10 @@ public class MainActivity extends AppCompatActivity {
 
 	private void setMenuClicked(@NonNull String menuClicked) {
 		this.menuClicked = menuClicked;
+	}
+
+	public void shouldShowProgress(boolean yes) {
+		findViewById(R.id.loadingPb).setVisibility(yes ? ProgressBar.VISIBLE : ProgressBar.GONE);
 	}
 
 	private void updateMenuTitle(@NonNull String sortedByTitle) {
