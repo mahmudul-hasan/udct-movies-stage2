@@ -15,6 +15,6 @@ public class DeviceConfigurationIntoGridSpanTransformer implements Transformer<C
 
 	@Override
 	public Integer transform(@NonNull Configuration configuration) {
-		return configuration.orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 3;
+		return configuration.orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 4;
 	}
 }

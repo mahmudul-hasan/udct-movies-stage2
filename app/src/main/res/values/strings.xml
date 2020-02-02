@@ -10,4 +10,5 @@
     <string name="synopsis">Synopsis</string>
     <string name="trailers">Watch\n Trailers</string>
     <string name="trailers_and_videos">Trailers and Videos</string>
+    <string name="videoShoeingError">Something went wrong. Please try again.</string>
 </resources>

@@ -4,6 +4,11 @@ import com.mhasan.udct.popmovies.database.FavoriteMovieEntity;
 import com.mhasan.udct.popmovies.mainpage.repository.model.MovieResponse.ResultsBean;
 import com.mhasan.udct.popmovies.utils.Transformer;
 
+/**
+ * This class transforms a MovieResponse.ResultsBean into a FavoriteMovieEntity.
+ *
+ * @author Mahmudul Hasan.
+ */
 public class FavoriteMovieTransformer implements Transformer<ResultsBean, FavoriteMovieEntity> {
 
 	@Override

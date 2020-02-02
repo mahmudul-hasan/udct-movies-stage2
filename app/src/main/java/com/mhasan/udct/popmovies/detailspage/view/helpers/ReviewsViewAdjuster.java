@@ -10,6 +10,11 @@ import android.widget.ListAdapter;
 
 import com.mhasan.udct.popmovies.utils.Modifier;
 
+/**
+ * This class adjusts the review expandable list view size and its contents' height.
+ *
+ * @author Mahmudul Hasan, with the help of https://stackoverflow.com/questions/17696039/expandablelistview-inside-a-scrollview
+ */
 public class ReviewsViewAdjuster implements Modifier<ExpandableListView> {
 
 	/**

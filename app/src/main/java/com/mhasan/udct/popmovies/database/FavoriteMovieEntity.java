@@ -3,6 +3,12 @@ package com.mhasan.udct.popmovies.database;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * This is the entity class for the favorite movie database that represents the favorite movie table
+ * on the database.
+ *
+ * @author Mahmudul Hasan.
+ */
 @Entity(tableName="favorite_movie_table")
 public class FavoriteMovieEntity {
 

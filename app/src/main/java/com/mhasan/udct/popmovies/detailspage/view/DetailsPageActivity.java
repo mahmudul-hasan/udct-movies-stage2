@@ -66,7 +66,6 @@ public class DetailsPageActivity extends AppCompatActivity {
 		new TrailerDisplayer(this).execute(videoTrailerResponse);
 	}
 
-	//TODO - refactor
 	private void initializeFavoriteButton(List<FavoriteMovieEntity> favoriteMovies) {
 		ImageView favoriteView = findViewById(R.id.favoriteButtonIv);
 		for (FavoriteMovieEntity favoriteMovie : favoriteMovies) {
